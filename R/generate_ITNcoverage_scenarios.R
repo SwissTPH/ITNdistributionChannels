@@ -17,7 +17,6 @@
 #' \deqn{\exp\left(-\left(\frac{t}{L \times 365}\right)^{\kappa} \log(2)\right)}
 #' where \eqn{L} is the half-life and \eqn{\kappa} is the Weibull shape parameter.
 #'
-#' @export
 calculate_cov=function(L, kappa){
   ITNdecay= data.frame(
     time=1:(20*365))
@@ -128,6 +127,7 @@ generate_massCampaign_UniformAllAges=function(halflife_weibull=2.1,
 #' @param ageGroup Character. Name of the targeted age group.
 #' @param otherageGroup Character. Name of the non-targeted age group.
 #' @param ageGroupProp Numeric. Proportion of total population in target group.
+#' @param full_output Boolean. Whether all intermediate coverage variables are returned (default =FALSE)
 #'
 #' @return A data.frame with time series of ITN usage for target and
 #' non-target age groups.
@@ -137,7 +137,7 @@ generate_massCampaign_SpecificAges=function(halflife_weibull=2.1,
                                               shape_weibull=2,
                                               reach=0.8, max_usage=0.8,
                                               frequency=3, ageGroup="U5",otherageGroup="others",
-                                            ageGroupProp=0.16
+                                            ageGroupProp=0.16, full_output=FALSE
                                             ){
   multiplier=1.8
   cov_targetpop=reach
@@ -159,11 +159,15 @@ generate_massCampaign_SpecificAges=function(halflife_weibull=2.1,
   ITNscenario=merge(ITNscenario_targetpop|> dplyr::rename(totcov_targetgroup=cov),
                     ITNscenario_otherpop|> dplyr::rename(totcov_othergroup=cov)) |>
     dplyr::mutate(spillover_cov_othergroup=pmax(0, totcov_targetgroup-1)*ageGroupProp/(1-ageGroupProp),
-           use_otherpop=pmin(max_usage*(totcov_othergroup+spillover_cov_othergroup), max_usage))|>
-    dplyr::select(time, use_targetpop,use_otherpop)|>
-    dplyr::mutate( reach=reach, max_usage=max_usage , halflife=halflife_weibull)
+           use_otherpop=pmin(max_usage*(totcov_othergroup+spillover_cov_othergroup), max_usage))
 
-  names(ITNscenario)[c(2,3)]=c(paste0("use_", ageGroup),paste0("use_", otherageGroup))
+  if(full_output==FALSE){
+    ITNscenario=ITNscenario |>
+      dplyr::select(time, use_targetpop,use_otherpop)|>
+      dplyr::mutate( reach=reach, max_usage=max_usage , halflife=halflife_weibull)
+    names(ITNscenario)[c(2,3)]=c(paste0("use_", ageGroup),paste0("use_", otherageGroup))
+
+  }
 
   return(ITNscenario)
 }
@@ -182,7 +186,6 @@ generate_massCampaign_SpecificAges=function(halflife_weibull=2.1,
 generate_continuousDistr_uniformAllAges=function(halflife_weibull=2.1,
                                                shape_weibull=2,
                                                reach=0.8, max_usage=0.8,
-                                               ageGroup="U1",otherageGroup="others",
                                                ageGroupProp=0.035
 ){
   multiplier=1.8
@@ -211,7 +214,7 @@ generate_continuousDistr_SpecificAges=function(halflife_weibull=2.1,
                                             shape_weibull=2,
                                             reach=0.8, max_usage=0.8,
                                             ageGroup="U1",otherageGroup="others",
-                                            ageGroupProp=0.035
+                                            ageGroupProp=0.035, full_output=FALSE
 ){
   multiplier=1.8
   cov_targetpop=reach
@@ -231,11 +234,15 @@ generate_continuousDistr_SpecificAges=function(halflife_weibull=2.1,
   ITNscenario=merge(ITNscenario_targetpop|> dplyr::rename(totcov_targetgroup=cov),
                     ITNscenario_otherpop|> dplyr::rename(totcov_othergroup=cov))|>
     dplyr::mutate(spillover_cov_othergroup=pmax(0, totcov_targetgroup-1)*ageGroupProp/(1-ageGroupProp),
-           use_otherpop=pmin(max_usage*(totcov_othergroup+spillover_cov_othergroup), max_usage))|>
-    dplyr::select(time, use_targetpop,use_otherpop)|>
-    dplyr::mutate( reach=reach, max_usage=max_usage , halflife=halflife_weibull)
+           use_otherpop=pmin(max_usage*(totcov_othergroup+spillover_cov_othergroup), max_usage))
 
-  names(ITNscenario)[c(2,3)]=c(paste0("use_", ageGroup),paste0("use_", otherageGroup))
+  if(full_output==FALSE){
+    ITNscenario=ITNscenario |>
+      dplyr::select(time, use_targetpop,use_otherpop)|>
+      dplyr::mutate( reach=reach, max_usage=max_usage , halflife=halflife_weibull)
+    names(ITNscenario)[c(2,3)]=c(paste0("use_", ageGroup),paste0("use_", otherageGroup))
+
+  }
 
   return(ITNscenario)
 }
