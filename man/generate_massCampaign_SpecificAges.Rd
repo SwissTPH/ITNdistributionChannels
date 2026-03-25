@@ -12,7 +12,8 @@ generate_massCampaign_SpecificAges(
   frequency = 3,
   ageGroup = "U5",
   otherageGroup = "others",
-  ageGroupProp = 0.16
+  ageGroupProp = 0.16,
+  full_output = FALSE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ generate_massCampaign_SpecificAges(
 \item{otherageGroup}{Character. Name of the non-targeted age group.}
 
 \item{ageGroupProp}{Numeric. Proportion of total population in target group.}
+
+\item{full_output}{Boolean. Whether all intermediate coverage variables are returned (default =FALSE)}
 }
 \value{
 A data.frame with time series of ITN usage for target and

@@ -11,7 +11,8 @@ generate_continuousDistr_SpecificAges(
   max_usage = 0.8,
   ageGroup = "U1",
   otherageGroup = "others",
-  ageGroupProp = 0.035
+  ageGroupProp = 0.035,
+  full_output = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ generate_continuousDistr_SpecificAges(
 \item{otherageGroup}{Character. Name of the non-targeted age group.}
 
 \item{ageGroupProp}{Numeric. Proportion of total population in target group.}
+
+\item{full_output}{Boolean. Whether all intermediate coverage variables are returned (default =FALSE)}
 }
 \value{
 A data.frame containing time series of ITN usage by age group.
