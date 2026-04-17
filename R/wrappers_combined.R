@@ -13,8 +13,8 @@ getCov_AlternateSchool=function(halflife, reach, max_usage, pop6to14=0.27, prop_
   scenario=generate_AlternateCont_SpecificAges(halflife_weibull = halflife,
                                                  shape_weibull=shape_weibull,frequency_mass = frequency_mass,
                                                  reach_cont = reach*prop_school_classes,ageGroup_cont ="schoolchildren",otherageGroup_cont = "others",
-                                                 ageGroupProp_cont =pop6to14, max_usage = max_usage)%>%
-    mutate(reach=reach, max_usage=max_usage, halflife=halflife)
+                                                 ageGroupProp_cont =pop6to14, max_usage = max_usage)|>
+    dplyr::mutate(reach=reach, max_usage=max_usage, halflife=halflife)
 
 
   summary_use_schoolchildren=get_average_coverage_continuous(scenario, year=year_start,col = "use_schoolchildren")
@@ -77,9 +77,9 @@ getCov_ContinuousSchoolRoutine=function(halflife, reach_school, reach_routine, m
                                                ageGroupProp_cont1 = pop_routine,ageGroupProp_cont2 = pop6to14,
                                                ageGroupCont1 ="U1",ageGroupCont2 = "schoolchildren",
                                                max_usage = max_usage)
-  summary_use_schoolchildren=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=12,col = "use_schoolchildren")
-  summary_use_others=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=12,col = "use_others")
-  summary_use_U1=get_average_coverage_continuous(scenario %>% mutate(reach=reach_routine), year=12,col = "use_U1")
+  summary_use_schoolchildren=get_average_coverage_continuous(scenario |> dplyr::mutate(reach=reach_school), year=12,col = "use_schoolchildren")
+  summary_use_others=get_average_coverage_continuous(scenario |> dplyr::mutate(reach=reach_school), year=12,col = "use_others")
+  summary_use_U1=get_average_coverage_continuous(scenario |> dplyr::mutate(reach=reach_routine), year=12,col = "use_U1")
 
   return(list("use_schoolchildren"=as.numeric(summary_use_schoolchildren$use_schoolchildren),
               "use_U1"=as.numeric(summary_use_U1$use_U1),
@@ -110,15 +110,11 @@ getCov_AlternateSchoolRoutine=function(halflife, reach_school, reach_routine,
                                                ageGroup_cont="schoolchildren",otherageGroup_cont="others",
                                                ageGroup_routine="U1",otherageGroup_routine="others")
 
-  summary_use_schoolchildren=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=year_start,col = "use_schoolchildren")
-  summary_use_others=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=year_start,col = "use_others")
-  summary_use_U1=get_average_coverage_continuous(scenario %>% mutate(reach=reach_routine), year=year_start,col = "use_U1")
+  summary_use_schoolchildren=get_average_coverage_continuous(scenario |> dplyr::mutate(reach=reach_school), year=year_start,col = "use_schoolchildren")
+  summary_use_others=get_average_coverage_continuous(scenario |> dplyr::mutate(reach=reach_school), year=year_start,col = "use_others")
+  summary_use_U1=get_average_coverage_continuous(scenario |> dplyr::mutate(reach=reach_routine), year=year_start,col = "use_U1")
 
   return(list("use_schoolchildren"=as.numeric(summary_use_schoolchildren$use_schoolchildren),
               "use_U1"=as.numeric(summary_use_U1$use_U1),
               "use_others"=as.numeric(summary_use_others$use_others)))
 }
-
-
-getCov_AlternateSchoolRoutine(2,0.8, 0.8, 0.8, year_start = 12)
-getCov_AlternateSchoolRoutine(2,0.8, 0.8, 0.8, year_start = 13)
