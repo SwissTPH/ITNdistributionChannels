@@ -80,6 +80,7 @@ getCov_ContinuousSchoolRoutine=function(halflife, reach_school, reach_routine, m
   summary_use_U1=get_average_coverage_continuous(scenario %>% mutate(reach=reach_routine), year=12,col = "use_U1")
 
   return(list("use_schoolchildren"=as.numeric(summary_use_schoolchildren$use_schoolchildren),
+              "use_U1"=as.numeric(summary_use_U1$use_U1),
               "use_others"=as.numeric(summary_use_others$use_others)))
 }
 
