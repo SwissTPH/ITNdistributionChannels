@@ -71,13 +71,13 @@ getCov_MassCampaign5years=function(halflife, reach, max_usage, shape_weibull=2){
 getCov_ContinuousSchoolRoutine=function(halflife, reach_school, reach_routine, max_usage, pop6to14=0.27,prop_school_classes=0.5, pop_routine=0.035, shape_weibull=2){
 
   scenario=generate_ContAndContinuousDistr_SpecificAges(halflife_weibull = halflife,shape_weibull = shape_weibull,
-                                               reach_cont1 = reach_routine, reach_cont2 = reach*prop_school_classes,
+                                               reach_cont1 = reach_routine, reach_cont2 = reach_school*prop_school_classes,
                                                ageGroupProp_cont1 = pop_routine,ageGroupProp_cont2 = pop6to14,
                                                ageGroupCont1 ="U1",ageGroupCont2 = "schoolchildren",
                                                max_usage = max_usage)
   summary_use_schoolchildren=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=12,col = "use_schoolchildren")
   summary_use_others=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=12,col = "use_others")
-  summary_use_U1=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=12,col = "use_U1")
+  summary_use_U1=get_average_coverage_continuous(scenario %>% mutate(reach=reach_routine), year=12,col = "use_U1")
 
   return(list("use_schoolchildren"=as.numeric(summary_use_schoolchildren$use_schoolchildren),
               "use_others"=as.numeric(summary_use_others$use_others)))
