@@ -1,6 +1,6 @@
 #' Continuous Distribution Coverage, school in non campaign years (Age-Specific: Schoolchildren)
 #'
-#' Computes coverage for schoolchildren and others in a continuous distribution.
+#' Computes coverage for schoolchildren and others in a continuous distribution in non campaign years
 #'
 #' @inheritParams getCov_ContinuousSchoolunif
 #' @frequency_mass Frequency of the mass distribution
@@ -65,6 +65,8 @@ getCov_MassCampaign5years=function(halflife, reach, max_usage, shape_weibull=2){
 #' Computes coverage for schoolchildren and others in a continuous distribution.
 #'
 #' @inheritParams getCov_ContinuousSchoolunif
+#' @reach_school
+#' @reach_routine
 #'
 #' @return List with coverage for schoolchildren and others.
 #' @export
@@ -84,3 +86,39 @@ getCov_ContinuousSchoolRoutine=function(halflife, reach_school, reach_routine, m
               "use_others"=as.numeric(summary_use_others$use_others)))
 }
 
+
+
+
+#' Continuous Distribution Coverage (Age-Specific: Schoolchildren + Routine)
+#'
+#' Computes coverage for schoolchildren, U1 and others in a continuous distribution in non campaign years
+##'
+#' @inheritParams getCov_ContinuousSchoolunif
+#'
+#' @return List with coverage for schoolchildren and others.
+#' @export
+getCov_AlternateSchoolRoutine=function(halflife, reach_school, reach_routine,
+                                       max_usage, pop6to14=0.27,prop_school_classes=0.5,
+                                       pop_routine=0.035, shape_weibull=2,
+                                       year_start=12){
+
+  scenario=generate_AlternateContRoutine_SpecificAges(halflife_weibull = halflife,shape_weibull = shape_weibull,
+                                               max_usage=max_usage,
+                                               frequency_mass=3,
+                                               reach_cont= reach_school*prop_school_classes, ageGroupProp_cont=pop6to14,
+                                               reach_routine=reach_routine, ageGroupProp_routine=pop_routine,
+                                               ageGroup_cont="schoolchildren",otherageGroup_cont="others",
+                                               ageGroup_routine="U1",otherageGroup_routine="others")
+
+  summary_use_schoolchildren=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=year_start,col = "use_schoolchildren")
+  summary_use_others=get_average_coverage_continuous(scenario %>% mutate(reach=reach_school), year=year_start,col = "use_others")
+  summary_use_U1=get_average_coverage_continuous(scenario %>% mutate(reach=reach_routine), year=year_start,col = "use_U1")
+
+  return(list("use_schoolchildren"=as.numeric(summary_use_schoolchildren$use_schoolchildren),
+              "use_U1"=as.numeric(summary_use_U1$use_U1),
+              "use_others"=as.numeric(summary_use_others$use_others)))
+}
+
+
+getCov_AlternateSchoolRoutine(2,0.8, 0.8, 0.8, year_start = 12)
+getCov_AlternateSchoolRoutine(2,0.8, 0.8, 0.8, year_start = 13)
