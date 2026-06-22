@@ -39,7 +39,7 @@ getCov_AlternateSchool=function(halflife, reach, max_usage, pop6to14=0.27, prop_
 getCov_MassAlternateSchool=function(halflife, reach_mass, reach_school, max_usage, pop6to14=0.27, prop_school_classes=0.5, shape_weibull=2,
                                 frequency_mass=3, year_start=12){
   scenario=generate_AlternateMassCont_SpecificAges(halflife_weibull = halflife,
-                                               shape_weibull=shape_weibull,reach_mass = reach_mass,
+                                               shape_weibull=shape_weibull,reach_mass = reach_mass,frequency_mass = frequency_mass,
                                                reach_cont = reach_school*prop_school_classes,
                                                ageGroupProp_cont =pop6to14, max_usage = max_usage,
                                                ageGroup_cont ="schoolchildren",otherageGroup_cont = "others")|>
@@ -128,11 +128,11 @@ getCov_ContinuousSchoolRoutine=function(halflife, reach_school, reach_routine, m
 getCov_AlternateSchoolRoutine=function(halflife, reach_school, reach_routine,
                                        max_usage, pop6to14=0.27,prop_school_classes=0.5,
                                        pop_routine=0.035, shape_weibull=2,
-                                       year_start=12){
+                                       year_start=12, frequency_mass=3){
 
   scenario=generate_AlternateContRoutine_SpecificAges(halflife_weibull = halflife,shape_weibull = shape_weibull,
                                                max_usage=max_usage,
-                                               frequency_mass=3,
+                                               frequency_mass=frequency_mass,
                                                reach_cont= reach_school*prop_school_classes, ageGroupProp_cont=pop6to14,
                                                reach_routine=reach_routine, ageGroupProp_routine=pop_routine,
                                                ageGroup_cont="schoolchildren",otherageGroup_cont="others",
